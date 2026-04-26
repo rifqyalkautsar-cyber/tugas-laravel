@@ -64,9 +64,16 @@ class BarangController extends Controller
     // 4. Fungsi Hapus Data (Delete)
     public function destroy($id)
     {
+        // OTORISASI: Cek apakah yang sedang login adalah 'admin'
+        if (auth()->user()->role !== 'admin') {
+            return response()->json([
+                'message' => 'Akses Ditolak! Hanya Admin yang boleh menghapus data.'
+            ], 403);
+        }
+
         $barang = Barang::findOrFail($id);
         $barang->delete();
 
-        return response()->json(['message' => 'Data berhasil dihapus']);
+        return response()->json(['message' => 'Data berhasil dihapus oleh Admin']);
     }
 }
